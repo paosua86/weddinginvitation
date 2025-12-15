@@ -45,49 +45,6 @@ function useCountdown(targetUtcDate) {
     return { days, hours, minutes, seconds, done: diff === 0 };
   }, [now, targetUtcDate]);
 }
-function VideoSection({
-  title = "Nuestra canción",
-  subtitle = "Dale play si deseas verlo",
-  youtubeUrl = "https://www.youtube.com/embed/baUk9YcCxBQ?si=WX6y0BWptc5ZvNFJ",
-}) {
-  return (
-    <section className="px-5 sm:px-8 py-10">
-      <div className="mx-auto max-w-[980px]">
-        <div className="text-center">
-          <h2
-            className="font-serif text-[28px] sm:text-[34px] tracking-wide"
-            style={{ color: COLORS.walnut }}
-          >
-            {title}
-          </h2>
-          <p className="mt-2 font-serif text-[16px]" style={{ color: COLORS.clay }}>
-            {subtitle}
-          </p>
-        </div>
-
-        <div className="mt-6 overflow-hidden rounded-3xl border border-black/10 bg-white/50 shadow-sm">
-          {/* Wrapper responsive (16:9) */}
-          <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
-            <iframe
-              className="absolute inset-0 h-full w-full"
-              src={youtubeUrl}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          </div>
-
-          {/* Nota opcional */}
-          <div className="px-4 py-3 text-center text-[12px] font-serif" style={{ color: COLORS.clay }}>
-            </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 
 /* =========================
    REVEAL HELPERS (NEW)
@@ -739,12 +696,20 @@ export default function App() {
       </Section>
 
       <DividerPampa />
+<br></br>
+       {/* FOTO7 (tu código ya usa foto7 aquí, lo dejo igual) */}
+      <div className="mx-auto max-w-[980px] px-4 pb-14">
+        <RevealImg>
+          <div className="overflow-hidden rounded-3xl border border-black/10 bg-white/40 shadow-sm">
+            <Img
+              src={withBase("foto7.jpg")}
+              alt="foto7"
+              className="h-[52vh] w-full object-cover sm:h-[60vh]"
+            />
+          </div>
+        </RevealImg>
+      </div>
 
-       <VideoSection
-  title="Nuestro video"
-  subtitle="Si deseas, dale play y acompáñanos 💛"
-  youtubeUrl="https://www.youtube.com/embed/baUk9YcCxBQ?si=WX6y0BWptc5ZvNFJ"
-/>
 
  <DividerPampa />
 
