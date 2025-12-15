@@ -15,8 +15,12 @@ const COLORS = {
 };
 
 const RSVP_URL = "#"; // TODO: pega aquí tu link (Google Form / WhatsApp)
-const TRANSPORTE_URL = "#"; // TODO: pega aquí tu link de transporte
+const TRANSPORTE_URL =
+  "https://api.whatsapp.com/send?phone=593984678642&text=Hola%2C%20escribo%20para%20coordinar%20mi%20translado%20a%20la%20Boda%20de%20Andy%20y%20Dany%20a%20realizarse%20en%20la%20Villa%20Fiorenza%20en%20San%20Felipe%20y%20Manuel%20Burbano%20Puembo%2C%20Pichincha%2C%20Ecuador%20el%2014%20Mar%202026%2C%20tengo%20que%20estar%20ah%C3%AD%20antes%20de%20las%2012h30";
 const MAPS_URL = "https://maps.app.goo.gl/5dtPZgpTsiLKbUWa9?g_st=ipc";
+const PLANNER_URL =
+  "https://api.whatsapp.com/send?phone=+593984044040&text=Hola%20Victoria%20Rom%C3%A1n%2C%20escribo%20con%20respecto%20a%20la%20Boda%20de%20Andy%20y%20Dany%20a%20realizarse%20en%20la%20Villa%20Fiorenza%20en%20San%20Felipe%20y%20Manuel%20Burbano%20Puembo%2C%20Pichincha%2C%20Ecuador%20el%2014%20Mar%202026.%20Mi%20pregunta%20es%20la%20siguiente%3A%20";
+
 
 // 14 Marzo 2026 12h30 Ecuador (UTC-5) => 17:30Z
 const WEDDING_UTC = new Date(Date.UTC(2026, 2, 14, 17, 30, 0));
@@ -671,6 +675,28 @@ export default function App() {
                   </div>
                 </div>
               </Card>
+
+              <Card className="p-5 sm:p-6 sm:col-span-2">
+              <div className="flex gap-4">
+                <div className="h-12 w-12">
+                  <Icon name="time" className="h-12 w-12" />
+                </div>
+
+                <div className="flex-1">
+                  <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
+                    ¿Preguntas?
+                  </div>
+                  <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
+                    Contacta a nuestra wedding planner.
+                  </div>
+
+                  <div className="mt-3">
+                    <Button href={PLANNER_URL}>Contacto</Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
             </Reveal>
           </div>
         </div>
