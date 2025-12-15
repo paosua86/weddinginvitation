@@ -45,6 +45,49 @@ function useCountdown(targetUtcDate) {
     return { days, hours, minutes, seconds, done: diff === 0 };
   }, [now, targetUtcDate]);
 }
+function VideoSection({
+  title = "Nuestra canción",
+  subtitle = "Dale play si deseas verlo",
+  youtubeUrl = "https://www.youtube.com/embed/baUk9YcCxBQ?si=WX6y0BWptc5ZvNFJ",
+}) {
+  return (
+    <section className="px-5 sm:px-8 py-10">
+      <div className="mx-auto max-w-[980px]">
+        <div className="text-center">
+          <h2
+            className="font-serif text-[28px] sm:text-[34px] tracking-wide"
+            style={{ color: COLORS.walnut }}
+          >
+            {title}
+          </h2>
+          <p className="mt-2 font-serif text-[16px]" style={{ color: COLORS.clay }}>
+            {subtitle}
+          </p>
+        </div>
+
+        <div className="mt-6 overflow-hidden rounded-3xl border border-black/10 bg-white/50 shadow-sm">
+          {/* Wrapper responsive (16:9) */}
+          <div className="relative w-full" style={{ paddingTop: "56.25%" }}>
+            <iframe
+              className="absolute inset-0 h-full w-full"
+              src={youtubeUrl}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
+          </div>
+
+          {/* Nota opcional */}
+          <div className="px-4 py-3 text-center text-[12px] font-serif" style={{ color: COLORS.clay }}>
+            </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 
 /* =========================
    REVEAL HELPERS (NEW)
@@ -469,7 +512,7 @@ export default function App() {
           <Reveal delay={0.24}>
             <div className="mx-auto mt-7 max-w-[720px]">
               <Body className="text-[18px]" style={{ color: COLORS.walnut }}>
-                “Así que ya no son dos, sino uno solo. Por los tanto, lo que Dios ha unido, que no lo
+                “Así que ya no son dos, sino uno solo. Por lo tanto, lo que Dios ha unido, que no lo
                 separe el hombre.” <br></br> <br></br>
                 <b>Mateo 19:6</b>
               </Body>
@@ -697,6 +740,14 @@ export default function App() {
 
       <DividerPampa />
 
+       <VideoSection
+  title="Nuestro video"
+  subtitle="Si deseas, dale play y acompáñanos 💛"
+  youtubeUrl="https://www.youtube.com/embed/baUk9YcCxBQ?si=WX6y0BWptc5ZvNFJ"
+/>
+
+ <DividerPampa />
+
       {/* OBSEQUIO */}
       <Section className="py-10">
         <div className="mx-auto max-w-[920px]">
@@ -708,7 +759,7 @@ export default function App() {
             <Reveal delay={0.06}>
               <div className="mx-auto mt-3 max-w-[760px]">
                 <Body style={{ color: COLORS.walnut }}>
-                  Si deseas darnos un detalle puedes hacerlo dentro de un sobre que se receptara en la
+                  Si deseas darnos un detalle puedes hacerlo dentro de un sobre que se recibirá en la
                   recepción o mediante transferencia
                 </Body>
                 <br></br>
@@ -744,7 +795,7 @@ export default function App() {
                 </div>
                 <div className="mt-3 space-y-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
                   <div>
-                    <b>Andy Josue Minchala Leon</b>
+                    <b>Andy Josue Minchala León</b>
                   </div>
                   <div>Cuenta ahorros</div>
                   <div>CI: 0106766116</div>
@@ -758,6 +809,9 @@ export default function App() {
       </Section>
 
       <DividerPampa />
+
+
+
 
       {/* FOTO5 (tu código ya usa foto6 aquí, lo dejo igual) */}
       <div className="mx-auto max-w-[980px] px-4 pb-14">
