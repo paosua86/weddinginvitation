@@ -354,6 +354,11 @@ function RSVPBlock() {
   );
 }
 
+const BASE = import.meta.env.BASE_URL;
+const withBase = (p) => `${BASE}${String(p).replace(/^\/+/, "")}`;
+
+
+
 export default function App() {
   return (
     <div className="min-h-screen" style={{ background: COLORS.bone, color: COLORS.ink }}>
@@ -368,7 +373,7 @@ export default function App() {
       {/* HERO */}
       <div className="mx-auto max-w-[980px] px-4 pt-6 sm:pt-10">
         <div className="overflow-hidden rounded-3xl border border-black/10 bg-white/40 shadow-sm">
-          <Img src="/foto1.jpg" alt="foto1" className="h-[62vh] w-full object-cover sm:h-[72vh]" />
+          <Img src={withBase("foto1.jpg")} alt="foto1" className="h-[62vh] w-full object-cover sm:h-[72vh]" />
         </div>
       </div>
 
@@ -405,7 +410,7 @@ export default function App() {
       {/* FOTO2 */}
       <div className="mx-auto max-w-[980px] px-4">
         <div className="overflow-hidden rounded-3xl border border-black/10 bg-white/40 shadow-sm">
-          <Img src="/foto2.jpg" alt="foto2" className="h-[52vh] w-full object-cover sm:h-[60vh]" />
+          <Img src={withBase("foto2.jpg")} alt="foto2" className="h-[52vh] w-full object-cover sm:h-[60vh]" />
         </div>
       </div>
 
@@ -414,8 +419,8 @@ export default function App() {
       {/* FOTO3 */}
       <div className="mx-auto max-w-[980px] px-4">
         <div className="overflow-hidden rounded-3xl border border-black/10 bg-white/40 shadow-sm">
-          <Img src="/foto3.jpg" alt="foto3" className="h-[52vh] w-full object-cover sm:h-[60vh]" />
-        </div>
+          <Img src={withBase("foto3.jpg")} alt="foto3" className="h-[52vh] w-full object-cover sm:h-[60vh]" />
+       </div>
       </div>
 
       {/* CEREMONIA */}
@@ -574,7 +579,7 @@ export default function App() {
       {/* FOTO4 */}
       <div className="mx-auto max-w-[980px] px-4">
         <div className="overflow-hidden rounded-3xl border border-black/10 bg-white/40 shadow-sm">
-          <Img src="/foto4.jpg" alt="foto4" className="h-[52vh] w-full object-cover sm:h-[60vh]" />
+          <Img src={withBase("foto4.jpg")} alt="foto4" className="h-[52vh] w-full object-cover sm:h-[60vh]" />
         </div>
       </div>
 
@@ -642,7 +647,7 @@ export default function App() {
       {/* FOTO5 */}
       <div className="mx-auto max-w-[980px] px-4 pb-14">
         <div className="overflow-hidden rounded-3xl border border-black/10 bg-white/40 shadow-sm">
-          <Img src="/foto5.jpg" alt="foto5" className="h-[52vh] w-full object-cover sm:h-[60vh]" />
+          <Img src={withBase("foto5.jpg")} alt="foto5" className="h-[52vh] w-full object-cover sm:h-[60vh]" />
         </div>
 
         <div className="mt-8 text-center font-serif text-[14px]" style={{ color: COLORS.clay }}>
