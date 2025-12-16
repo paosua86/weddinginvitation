@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
+
 
 /**
  * Landing boda (React + Tailwind) — sin menú, responsive.
@@ -20,6 +22,10 @@ const TRANSPORTE_URL =
 const MAPS_URL = "https://maps.app.goo.gl/5dtPZgpTsiLKbUWa9?g_st=ipc";
 const PLANNER_URL =
   "https://api.whatsapp.com/send?phone=+593984044040&text=Hola%20Victoria%20Rom%C3%A1n%2C%20escribo%20con%20respecto%20a%20la%20Boda%20de%20Andy%20y%20Dany%20a%20realizarse%20en%20la%20Villa%20Fiorenza%20en%20San%20Felipe%20y%20Manuel%20Burbano%20Puembo%2C%20Pichincha%2C%20Ecuador%20el%2014%20Mar%202026.%20Mi%20pregunta%20es%20la%20siguiente%3A%20";
+const RSVP_ENDPOINT =
+  "https://script.google.com/macros/s/AKfycbyVQ7anZzC2A6yi_ABOBKdNCYZfcimn06NZJrUab83HnGnrLl9XQhtdLJCGOnyCAMi-bw/exec";
+
+
 
 
 // 14 Marzo 2026 12h30 Ecuador (UTC-5) => 17:30Z
@@ -340,77 +346,187 @@ function Button({ href, onClick, children, className = "" }) {
   );
 }
 
-function RSVPBlock() {
-  const [pases, setPases] = useState(2);
-  const [nombre, setNombre] = useState("");
-  const [msg, setMsg] = useState("");
+function jsonp(url, timeoutMs = 12000) {
+  return new Promise((resolve, reject) => {
+    const cbName = `__rsvp_cb_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
 
-  function confirm() {
-    const n = nombre.trim() || "Invitado";
-    setMsg(
-      `Gracias por confirmar tu asistencia, ${n}. Tienes ${pases} pase${pases === 1 ? "" : "s"}. Úsalos sabiamente ✨`
-    );
+    const cleanup = () => {
+      try { delete window[cbName]; } catch {}
+      script.remove();
+      clearTimeout(timer);
+    };
+
+    window[cbName] = (data) => {
+      cleanup();
+      resolve(data);
+    };
+
+    const script = document.createElement("script");
+    const sep = url.includes("?") ? "&" : "?";
+    script.src = `${url}${sep}callback=${encodeURIComponent(cbName)}`;
+    script.async = true;
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("JSONP_LOAD_ERROR"));
+    };
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error("JSONP_TIMEOUT"));
+    }, timeoutMs);
+
+    document.body.appendChild(script);
+  });
+}
+
+
+
+function RSVPBlock() {
+
+  const [codigo, setCodigo] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState(null); // { title, body }
+  const [error, setError] = useState("");
+
+  const myConfetti = useMemo(
+    () => confetti.create(null, { resize: true, useWorker: true }),
+    []
+  );
+
+  function closePopup() {
+    setMsg(null);
+  }
+
+
+  function partyPop() {
+    myConfetti({
+      particleCount: 140,
+      spread: 90,
+      startVelocity: 45,
+      origin: { y: 0.72 },
+      zIndex: 999999,
+    });
+
+    setTimeout(() => {
+      myConfetti({
+        particleCount: 90,
+        spread: 120,
+        startVelocity: 40,
+        origin: { y: 0.75 },
+        zIndex: 999999,
+      });
+    }, 220);
+  }
+
+  function buildUrl(params) {
+    const baseHasQuery = RSVP_ENDPOINT.includes("?");
+    const sep = baseHasQuery ? "&" : "?";
+    return `${RSVP_ENDPOINT}${sep}${new URLSearchParams(params).toString()}`;
+  }
+
+  async function asistir() {
+    setError("");
+    setMsg(null);
+
+    const c = codigo.trim().toUpperCase().replace(/\s+/g, "");
+    if (!c) {
+      setError("Ingresa tu código (en MAYÚSCULAS) para confirmar tu asistencia.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // ✅ confirma en un solo paso
+      const url = buildUrl({ action: "confirm", code: c });
+      const json = await jsonp(url);
+
+      if (!json?.ok) {
+        const map = {
+          NOT_FOUND: "Código inválido. Revisa e intenta otra vez.",
+          INACTIVE_CODE: "Este código está inactivo. Escríbenos si necesitas ayuda.",
+          MISSING_CODE: "Te falta ingresar el código.",
+        };
+        setError(map[String(json?.error)] || "No se pudo confirmar. Intenta otra vez.");
+        return;
+      }
+
+      const nombre = json.displayName || "invitado";
+      const pases = Number(json.maxPases || 0);
+
+      setMsg({
+        title: json.alreadyConfirmed ? "¡Ya estabas confirmado! ✅" : "¡Confirmación lista! 🎉",
+        line1: <>Hola <b>{nombre}</b>, tienes <b>{pases}</b> pase{pases === 1 ? "" : "s"} para la boda.</>,
+        line2: <>¡Nos la pasaremos genial!</>,
+        line3: <>Gracias por tomarte el tiempo para confirmar tu asistencia.</>,
+      });
+
+
+      // ✅ AQUÍ VA EL CONFETTI
+      setTimeout(() => partyPop(), 0);
+
+    } catch (e) {
+      setError("No pude confirmar (conexión/endpoint). Si estás en local, esto normalmente es CORS y JSONP lo resuelve.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <Reveal>
-      <Card className="mx-auto max-w-[720px] p-5 sm:p-7">
-        <div className="text-center">
-          <TitleSerif>Confirmar asistencia</TitleSerif>
-          <div className="mt-2 font-serif text-[15px]" style={{ color: COLORS.clay }}>
-            Confirmar tu asistencia antes del <b>15 de Enero</b>
+    <Card className="mx-auto max-w-[720px] p-5 sm:p-7">
+      <div className="text-center">
+        <TitleSerif>Confirma tu asistencia</TitleSerif>
+        <div className="mt-2 font-serif text-[15px]" style={{ color: COLORS.clay }}>
+          Ingresa tu código si estás listo/a para confirmar tu asistencia:
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <label className="sm:col-span-2">
+          <div className="mb-1 text-[12px] tracking-[0.22em]" style={{ color: COLORS.walnut }}>
+            CÓDIGO EN MAYÚSCULAS
+          </div>
+          <input
+            value={codigo}
+            onChange={(e) => setCodigo(e.target.value.toUpperCase().replace(/\s+/g, ""))}
+            placeholder="EJ: AAA"
+            className="w-full rounded-xl border border-black/10 bg-white/70 px-4 py-3 font-serif outline-none focus:ring-2"
+          />
+        </label>
+
+        <div className="flex items-end">
+          <Button onClick={asistir} className="w-full">
+            {loading ? "Confirmando..." : "Asistiré"}
+          </Button>
+        </div>
+      </div>
+
+      {msg ? (
+        <div className="mx-auto mt-5 max-w-[680px] rounded-2xl border border-black/10 bg-white/60 px-5 py-5 text-center">
+          <div className="font-serif text-[22px] sm:text-[24px]" style={{ color: COLORS.walnut }}>
+            {msg.title}
+          </div>
+
+          <div className="mt-3 space-y-2 font-serif text-[18px] sm:text-[20px]" style={{ color: COLORS.clay }}>
+            <div>{msg.line1}</div>
+            <div>{msg.line2}</div>
+            <div>{msg.line3}</div>
           </div>
         </div>
+      ) : null}
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <label className="sm:col-span-2">
-            <div className="mb-1 text-[12px] tracking-widest" style={{ color: COLORS.walnut }}>
-              NOMBRE
-            </div>
-            <input
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              placeholder="Escribe tu nombre"
-              className="w-full rounded-xl border border-black/10 bg-white/70 px-4 py-3 font-serif outline-none focus:ring-2"
-            />
-          </label>
 
-          <label>
-            <div className="mb-1 text-[12px] tracking-widest" style={{ color: COLORS.walnut }}>
-              PASE
-            </div>
-            <select
-              value={pases}
-              onChange={(e) => setPases(Number(e.target.value))}
-              className="w-full rounded-xl border border-black/10 bg-white/70 px-4 py-3 font-serif outline-none focus:ring-2"
-            >
-              <option value={1}>1 persona</option>
-              <option value={2}>2 personas</option>
-            </select>
-          </label>
+      {error ? (
+        <div className="mx-auto mt-4 max-w-[680px] rounded-xl border border-red-500/20 bg-white/60 px-4 py-3 text-center font-serif">
+          <b style={{ color: "#b91c1c" }}>{error}</b>
         </div>
-
-        <div className="mt-4 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
-          <Button onClick={confirm}>Confirmar</Button>
-          <Button href={RSVP_URL}>Abrir link de confirmar</Button>
-        </div>
-
-        {msg ? (
-          <div
-            className="mx-auto mt-4 max-w-[620px] rounded-xl border border-black/10 bg-white/60 px-4 py-3 text-center font-serif"
-            style={{ color: COLORS.walnut }}
-          >
-            {msg}
-          </div>
-        ) : null}
-
-        <div className="mt-5 text-center text-[12px]" style={{ color: COLORS.clay }}>
-          (Si el link aún no está listo, el botón no abrirá nada.)
-        </div>
-      </Card>
-    </Reveal>
+      ) : null}
+    </Card>
   );
 }
+
+
+
 
 const BASE = import.meta.env.BASE_URL;
 const withBase = (p) => `${BASE}${String(p).replace(/^\/+/, "")}`;
@@ -675,16 +791,16 @@ export default function App() {
                   </div>
                 </div>
               </Card>
+              </Reveal>
 
+            <Reveal className="sm:col-span-2" delay={0.2}>
               <Card className="p-5 sm:p-6 sm:col-span-2">
-              <div className="flex gap-4">
-                <div className="h-12 w-12">
+                <div className="flex gap-4">
                   <Icon name="time" className="h-12 w-12" />
-                </div>
+                  <div className="flex-1">
+                    <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
 
-                <div className="flex-1">
-                  <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
-                    ¿Preguntas?
+                            ¿Preguntas?
                   </div>
                   <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
                     Contacta a nuestra wedding planner.
@@ -696,8 +812,9 @@ export default function App() {
                 </div>
               </div>
             </Card>
-
             </Reveal>
+
+
           </div>
         </div>
       </Section>
