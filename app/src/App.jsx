@@ -16,6 +16,8 @@ const COLORS = {
   ink: "#2b1d13",
 };
 
+
+
 const RSVP_URL = "#"; // TODO: pega aquí tu link (Google Form / WhatsApp)
 const TRANSPORTE_URL =
   "https://api.whatsapp.com/send?phone=593984678642&text=Hola%2C%20escribo%20para%20coordinar%20mi%20translado%20a%20la%20Boda%20de%20Andy%20y%20Dany%20a%20realizarse%20en%20la%20Villa%20Fiorenza%20en%20San%20Felipe%20y%20Manuel%20Burbano%20Puembo%2C%20Pichincha%2C%20Ecuador%20el%2014%20Mar%202026%2C%20tengo%20que%20estar%20ah%C3%AD%20antes%20de%20las%2012h30";
@@ -266,6 +268,32 @@ function Icon({ name, className = "" }) {
         <path {...common} d="M30 32v6" />
       </svg>
     ),
+    church: (
+    <svg viewBox="0 0 48 48" className={className}>
+      <path {...common} d="M24 6v10" />
+      <path {...common} d="M20 10h8" />
+      <path {...common} d="M14 20l10-8 10 8" />
+      <path {...common} d="M16 20v18" />
+      <path {...common} d="M32 20v18" />
+      <path {...common} d="M12 38h24" />
+      <path {...common} d="M21 38v-7c0-2 1.5-3.5 3-3.5s3 1.5 3 3.5v7" />
+      <path {...common} d="M18 26h4" />
+      <path {...common} d="M26 26h4" />
+    </svg>
+  ),
+
+  cheers: (
+    <svg viewBox="0 0 48 48" className={className}>
+      <path {...common} d="M12 14l8 4-4 12H9L12 14z" />
+      <path {...common} d="M36 14l-8 4 4 12h7l-3-16z" />
+      <path {...common} d="M16 30v6" />
+      <path {...common} d="M32 30v6" />
+      <path {...common} d="M12 40h12" />
+      <path {...common} d="M24 40h12" />
+      <path {...common} d="M20 18l8-4" />
+    </svg>
+  ),
+
   };
 
   return icons[name] ?? null;
@@ -380,6 +408,61 @@ function jsonp(url, timeoutMs = 12000) {
   });
 }
 
+function ChurchIcon({ className = "" }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} fill="none">
+      <path d="M32 10v10" stroke={COLORS.clay} strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M28 14h8" stroke={COLORS.clay} strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M18 28v26h28V28" stroke={COLORS.clay} strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M14 30l18-14 18 14" stroke={COLORS.clay} strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M28 54V42c0-3 2-6 4-6s4 3 4 6v12" stroke={COLORS.clay} strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M24 36h16" stroke={COLORS.clay} strokeWidth="1.2" strokeLinecap="round" opacity="0.7" />
+    </svg>
+  );
+}
+
+function ToastIcon({ className = "" }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} fill="none">
+      <g
+        stroke={COLORS.clay}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.85"
+      >
+        {/* bowl left */}
+        <path d="M20 16h12c0 10-3 18-6 18s-6-8-6-18Z" />
+        <path d="M26 34v10" />
+        <path d="M22 48h8" />
+
+        {/* bowl right */}
+        <path d="M32 16h12c0 10-3 18-6 18s-6-8-6-18Z" />
+        <path d="M38 34v10" />
+        <path d="M34 48h8" />
+
+        {/* clink sparkle */}
+        <path d="M31 14v4" />
+        <path d="M29 16h4" />
+      </g>
+    </svg>
+  );
+}
+
+
+function MiniEventCard({ icon, title, time }) {
+  return (
+    <Card className="min-h-[170px] px-6 py-6 text-center flex flex-col items-center justify-center">
+      <div className="h-14 w-14 mb-2 opacity-80">{icon}</div>
+      <div className="font-serif text-[18px] italic" style={{ color: COLORS.walnut }}>
+        {title}
+      </div>
+      <div className="mt-2 font-serif text-[18px] italic" style={{ color: COLORS.clay }}>
+        {time}
+      </div>
+    </Card>
+  );
+}
 
 
 function RSVPBlock() {
@@ -418,6 +501,8 @@ function RSVPBlock() {
       });
     }, 220);
   }
+
+
 
   function buildUrl(params) {
     const baseHasQuery = RSVP_ENDPOINT.includes("?");
@@ -479,6 +564,10 @@ function RSVPBlock() {
         <div className="mt-2 font-serif text-[15px]" style={{ color: COLORS.clay }}>
           Ingresa tu código si estás listo/a para confirmar tu asistencia:
         </div>
+        <div className="mt-2 font-serif text-[15px]" style={{ color: COLORS.clay }}>
+         (Confirmar hasta antes del 15 de febrero)
+        </div>
+
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -578,7 +667,7 @@ export default function App() {
               className="mt-3 font-serif text-[26px] sm:text-[30px] tracking-wide"
               style={{ color: COLORS.walnut }}
             >
-              14 Marzo del 2026
+              14 Marzo de 2026
             </div>
           </Reveal>
 
@@ -625,7 +714,7 @@ export default function App() {
 
           <Reveal delay={0.06}>
             <div className="mt-2 font-serif text-[22px]" style={{ color: COLORS.clay }}>
-              Villa Fiorenza
+             Lugar: Villa Fiorenza
             </div>
           </Reveal>
 
@@ -643,26 +732,14 @@ export default function App() {
             </div>
           </Reveal>
 
+
           <Reveal delay={0.2}>
             <div className="mx-auto mt-6 grid max-w-[520px] gap-3 sm:grid-cols-2">
-              <Card className="px-5 py-4 text-center">
-                <div className="text-[12px] tracking-widest" style={{ color: COLORS.clay }}>
-                  Hora
-                </div>
-                <div className="mt-1 font-serif text-[24px]" style={{ color: COLORS.walnut }}>
-                  12h30
-                </div>
-              </Card>
-              <Card className="px-5 py-4 text-center">
-                <div className="text-[12px] tracking-widest" style={{ color: COLORS.clay }}>
-                  Recepción
-                </div>
-                <div className="mt-1 font-serif text-[24px]" style={{ color: COLORS.walnut }}>
-                  14h30
-                </div>
-              </Card>
+              <MiniEventCard icon={<ChurchIcon className="h-full w-full" />} title="Ceremonia" time="12h30" />
+              <MiniEventCard icon={<ToastIcon className="h-full w-full" />} title="Recepción" time="14h30" />
             </div>
           </Reveal>
+
 
           {/* 👇 FOTO3 ahora aquí, después de recepción */}
           <div className="mx-auto mt-8 max-w-[980px] px-0">
@@ -683,141 +760,161 @@ export default function App() {
       <DividerPampa />
 
       {/* TIPS */}
-      <Section className="py-10">
-        <div className="mx-auto max-w-[900px]">
-          <Reveal className="text-center">
-            <TitleSerif>Tips que debes tomar en cuenta</TitleSerif>
-          </Reveal>
+<Section className="py-10">
+  <div className="mx-auto max-w-[900px]">
+    <Reveal className="text-center">
+      <TitleSerif>Tips que debes tomar en cuenta</TitleSerif>
+    </Reveal>
 
-          <div className="mt-7 grid gap-4 sm:grid-cols-2">
-            <Reveal>
-              <Card className="p-5 sm:p-6">
-                <div className="flex gap-4">
-                  <Icon name="shoe" className="h-12 w-12" />
-                  <div>
-                    <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
-                      Zapatos
-                    </div>
-                    <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
-                      Que tus zapatos no impidan un gran baile, lleva tus zapatos cómodos
-                    </div>
+    <div className="mt-7 grid items-stretch gap-4 sm:grid-cols-2">
+      {/* Zapatos */}
+      <Reveal>
+        <Card className="h-full p-5 sm:p-6">
+          <div className="flex h-full flex-col">
+            <div className="flex gap-4">
+              <Icon name="shoe" className="h-12 w-12" />
+              <div className="flex-1">
+                <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
+                  Zapatos
+                </div>
+                <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
+                  Que tus zapatos no impidan un gran baile, lleva tus zapatos cómodos
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </Reveal>
+
+      {/* Puntualidad */}
+      <Reveal delay={0.05}>
+        <Card className="h-full p-5 sm:p-6">
+          <div className="flex h-full flex-col">
+            <div className="flex gap-4">
+              <Icon name="time" className="h-12 w-12" />
+              <div className="flex-1">
+                <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
+                  Puntualidad
+                </div>
+                <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
+                  Procura llegar a tiempo para que no te pierdas ningún detalle
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </Reveal>
+
+      {/* Solo adultos */}
+      <Reveal delay={0.1}>
+        <Card className="h-full p-5 sm:p-6">
+          <div className="flex h-full flex-col">
+            <div className="flex gap-4">
+              <Icon name="adults" className="h-12 w-12" />
+              <div className="flex-1">
+                <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
+                  Solo adultos
+                </div>
+                <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
+                  Amamos a los niños pero esta vez la fiesta es solo para adultos
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </Reveal>
+
+      {/* Transporte */}
+      <Reveal delay={0.15}>
+        <Card className="h-full p-5 sm:p-6">
+          <div className="flex h-full flex-col">
+            <div className="flex gap-4">
+              <Icon name="taxi" className="h-12 w-12" />
+              <div className="flex-1">
+                <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
+                  Transporte
+                </div>
+                <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
+                  Si deseas transporte seguro, mira las opciones que te recomendamos
+                </div>
+
+                {/* botón pegado abajo */}
+                <div className="mt-auto pt-4">
+                  <Button href={TRANSPORTE_URL}>Transporte</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </Reveal>
+
+      {/* Dress code */}
+      <Reveal delay={0.15}>
+        <Card className="h-full p-5 sm:p-6">
+          <div className="flex h-full flex-col">
+            <div className="flex gap-4">
+              <Icon name="hanger" className="h-12 w-12" />
+              <div className="flex-1">
+                <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
+                  Dress code
+                </div>
+                <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
+                  <b>¡Que la elegancia predomine!</b> Recuerda que la vestimenta es formal.
+                  <div className="mt-2">
+                    Nos reservamos los colores <b>café</b> y <b>blanco</b> exclusivo para novios y la corte.
                   </div>
                 </div>
-              </Card>
-            </Reveal>
 
-            <Reveal delay={0.05}>
-              <Card className="p-5 sm:p-6">
-                <div className="flex gap-4">
-                  <Icon name="time" className="h-12 w-12" />
-                  <div>
-                    <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
-                      Puntualidad
+                {/* paleta pegada abajo */}
+                <div className="mt-auto pt-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-6 w-6 rounded-full border border-black/10"
+                      style={{ background: COLORS.walnut }}
+                      title="Walnut Brown"
+                    />
+                    <div
+                      className="h-6 w-6 rounded-full border border-black/10"
+                      style={{ background: "#ffffff" }}
+                      title="White"
+                    />
+                    <div className="ml-2 font-serif text-[14px]" style={{ color: COLORS.clay }}>
+                      (reservados)
                     </div>
-                    <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
-                      Procura llegar a tiempo para que no te pierdas ningún detalle
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <Card className="p-5 sm:p-6">
-                <div className="flex gap-4">
-                  <Icon name="adults" className="h-12 w-12" />
-                  <div>
-                    <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
-                      Solo adultos
-                    </div>
-                    <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
-                      Amamos a los niños pero esta vez la fiesta es solo para adultos
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </Reveal>
-
-            <Reveal delay={0.15}>
-              <Card className="p-5 sm:p-6">
-                <div className="flex gap-4">
-                  <Icon name="taxi" className="h-12 w-12" />
-                  <div>
-                    <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
-                      Transporte
-                    </div>
-                    <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
-                      Si deseas transporte seguro, mira las opciones que te recomendamos
-                    </div>
-                    <div className="mt-3">
-                      <Button href={TRANSPORTE_URL}>Transporte</Button>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </Reveal>
-
-            <Reveal className="sm:col-span-2" delay={0.2}>
-              <Card className="p-5 sm:p-6 sm:col-span-2">
-                <div className="flex gap-4">
-                  <Icon name="hanger" className="h-12 w-12" />
-                  <div className="flex-1">
-                    <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
-                      Dress code
-                    </div>
-                    <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
-                      <b>¡Que la elegancia predomine!</b> Recuerda que la vestimenta es formal.
-                      <div className="mt-2">
-                        Nos reservamos los colores <b>café</b> y <b>blanco</b> exclusivo para novios y
-                        la corte.
-                      </div>
-                    </div>
-
-                    <div className="mt-4 flex items-center gap-3">
-                      <div
-                        className="h-6 w-6 rounded-full border border-black/10"
-                        style={{ background: COLORS.walnut }}
-                        title="Walnut Brown"
-                      />
-                      <div
-                        className="h-6 w-6 rounded-full border border-black/10"
-                        style={{ background: "#ffffff" }}
-                        title="White"
-                      />
-                      <div className="ml-2 font-serif text-[14px]" style={{ color: COLORS.clay }}>
-                        (reservados)
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-              </Reveal>
-
-            <Reveal className="sm:col-span-2" delay={0.2}>
-              <Card className="p-5 sm:p-6 sm:col-span-2">
-                <div className="flex gap-4">
-                  <Icon name="time" className="h-12 w-12" />
-                  <div className="flex-1">
-                    <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
-
-                            ¿Preguntas?
-                  </div>
-                  <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
-                    Contacta a nuestra wedding planner.
-                  </div>
-
-                  <div className="mt-3">
-                    <Button href={PLANNER_URL}>Contacto</Button>
                   </div>
                 </div>
               </div>
-            </Card>
-            </Reveal>
-
-
+            </div>
           </div>
-        </div>
-      </Section>
+        </Card>
+      </Reveal>
+
+      {/* Preguntas */}
+      <Reveal delay={0.15}>
+        <Card className="h-full p-5 sm:p-6">
+          <div className="flex h-full flex-col">
+            <div className="flex gap-4">
+              <Icon name="time" className="h-12 w-12" />
+              <div className="flex-1">
+                <div className="font-serif text-[18px]" style={{ color: COLORS.walnut }}>
+                  ¿Preguntas?
+                </div>
+                <div className="mt-1 font-serif text-[16px]" style={{ color: COLORS.ink }}>
+                  Contacta a nuestra wedding planner.
+                </div>
+
+                {/* botón pegado abajo */}
+                <div className="mt-auto pt-4">
+                  <Button href={PLANNER_URL}>Contacto</Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </Reveal>
+    </div>
+  </div>
+</Section>
 
       <DividerPampa />
 
@@ -867,8 +964,7 @@ export default function App() {
             <Reveal delay={0.06}>
               <div className="mx-auto mt-3 max-w-[760px]">
                 <Body style={{ color: COLORS.walnut }}>
-                  Si deseas darnos un detalle puedes hacerlo dentro de un sobre que se recibirá en la
-                  recepción o mediante transferencia
+                  Contar con su presencia es el mejor regalo, pero si deseas darnos un detalle puedes hacerlo dentro de un sobre que se recibirá en la recepción o mediante transferencia.
                 </Body>
                 <br></br>
                 <div className="mt-4 font-serif text-[22px]" style={{ color: COLORS.clay }}>
