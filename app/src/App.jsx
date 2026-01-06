@@ -541,10 +541,20 @@ function RSVPBlock() {
 
       setMsg({
         title: json.alreadyConfirmed ? "¡Ya estabas confirmado! ✅" : "¡Confirmación lista! 🎉",
-        line1: <>Hola <b>{nombre}</b>, tienes <b>{pases}</b> pase{pases === 1 ? "" : "s"} para la boda.</>,
-        line2: <>¡Nos la pasaremos genial!</>,
-        line3: <>Gracias por tomarte el tiempo para confirmar tu asistencia.</>,
-      });
+         line1: (
+            <>
+              Hola <b>{nombre}</b>, tienes <b>{pases}</b> pase{pases === 1 ? "" : "s"} para la boda.
+            </>
+          ),
+          line2: (
+            <>
+              {pases === 1
+                ? "Será un honor celebrar este día tan especial junto a ti."
+                : "Será un honor celebrar este día tan especial junto a ustedes."}
+            </>
+          ),
+          line3: <>Gracias por tomarte el tiempo para confirmar tu asistencia.</>,
+        });
 
 
       // ✅ AQUÍ VA EL CONFETTI
